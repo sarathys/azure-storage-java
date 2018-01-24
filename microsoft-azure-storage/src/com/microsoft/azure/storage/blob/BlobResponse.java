@@ -185,7 +185,13 @@ final class BlobResponse extends BaseResponse {
 
             final String copySourceString = request.getHeaderField(Constants.HeaderConstants.COPY_SOURCE);
             if (!Utility.isNullOrEmpty(copySourceString)) {
-                copyState.setSource(new URI(copySourceString));
+                try {
+                    copyState.setSource(new URI(copySourceString));
+                } 
+                catch(URISyntaxException ex) {
+                    String blobUri = request.getURL().toString();
+                    copyState.setSource(new URI(blobUri));
+                }
             }
 
             final String copyCompletionTimeString =
